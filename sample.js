@@ -27,37 +27,31 @@ stage.add(layer); //layerをstageにadd (階層の上に順番に追加してい
 
 layer.draw(); //これで描画
 
+var xini = 200;
+var yini = 200;
 
-var group = new Konva.Group({
-    x: 10,
-    y: 10
-});
+window.addEventListener("keydown",(event)=>{
+  let ajstX = 0;
+  let ajstY = 0;
 
-// [x,y]の座標が詰まった配列
-var table = [[3,10],[5,20],[10,50],[30,60],[50,80],[80,100],[100,100],[110,120],[120,150],[150,170],[250,250]];
+  if (event.key === 's' ) { ajstX = 0, ajstY = 1;}
+  else if (event.key === 'd') {ajstX = 0, ajstY = -1;}
+  else if (event.key === 'k') {ajstX = -1, ajstY = 0;}
+  else if (event.key === 'l') {ajstX = 1; ajstY = 0}
 
-for (let i = 1; i < table.length; i++) {
-    var prevX = table[i-1][0];
-    var prevY = table[i-1][1];
-    var currentX = table[i][0];
-    var currentY = table[i][1];
-    console.log(i, prevX, prevY, currentX, currentY);
+  if(xini+ajstX >= 0 && xini+ajstX <= 400 && yini+ajstY >= 0 && yini+ajstY <= 400) {
+      var line = new Konva.Line({
+              points: [xini, yini, xini+ajstX, yini+ajstY],
+              stroke: '#696969',
+              strokeWidth: 3,
+              lineCap: 'round',
+              lineJoin: 'round',
+          })
+    xini = xini + ajstX;
+    yini = yini + ajstY;
 
-    var line = new Konva.Line({
-        points: [prevX, prevY, currentX, currentY],
-        stroke: '#696969',
-        strokeWidth: 3,
-        lineCap: 'round',
-        lineJoin: 'round',
-        id: `line_${i}`  //lineごとにidをふれる
-    })
-    line.on('mouseup', (e) => {
-        console.log(e.currentTarget.attrs.id); //クリックした時にid取得できる
-    });
-        group.add(line);
-    }
-
-  layer.add(group); // 最後groupをlayerにaddする
-  stage.add(layer); // layerをstageにaddする
-  layer.draw();     // 描画
-
+    layer.add(line);
+    stage.add(layer);
+    layer.draw();
+  }
+})
